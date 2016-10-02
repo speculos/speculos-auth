@@ -1,0 +1,221 @@
+swagger: '2.0'
+
+info:
+  version: 0.1.0
+  title: speculos-auth
+  description: Speculos auth module.
+  contact:
+    name: Official repository
+    url: https://github.com/speculos/speculos-auth
+  license:
+    name: MIT
+
+securityDefinitions:
+  token:
+    type: apiKey
+    description: |
+      Application token (JWT).
+      This token is hold in a `bearer` authorization header, taken from the [OAuth2 RFC](https://tools.ietf.org/html/rfc6750).
+    in: header
+    name: Authorization
+
+paths:
+  /tokens:
+    post:
+      description: |
+        Creates a new JWT from the provided user credentials.
+
+        - The email must be a valid email.
+        - The password must:
+          - Length between 8 and 20 characters
+          - Contain at least one uppercase letter.
+          - Contain at least one lowercase letter.
+          - Contain at least one digit.
+      parameters:
+        - name: credentials
+          in: body
+          description: Account credentials.
+          schema:
+            title: Credentials
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+            required:
+              - email
+              - password
+          required: true
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Success.
+          schema:
+            title: Token
+            type: object
+            properties:
+              token:
+                type: string
+            required:
+              - token
+        403:
+          description: |
+            - `user.passwordMismatch`: Mismatching password.
+        404:
+          description: |
+            - `user.notFound`: User not found.
+        409:
+          description: |
+            - `validation`: Missing or invalid parameter. Refer to the `details` object for more information.
+  /users:
+    get:
+      description: |
+        Search for users.
+
+        The returned users list will be paginated unless the provided token posseses the `search.bypassQuotas` right.
+      tags:
+        - Administration
+      parameters:
+        - name: page
+          in: query
+          type: number
+          format: integer
+          description: Page number.
+          required: false
+        - name: size
+          in: query
+          type: number
+          format: integer
+          description: Page size.
+          required: false
+        - name: email
+          in: query
+          type: string
+          description: User email.
+          required: false
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Success.
+          schema:
+            title: Users
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        401:
+          $ref: '#/responses/MissingOrInvalidToken'
+        403:
+          $ref: '#/responses/BadToken'
+        409:
+          description: |
+            - `validation`: Missing or invalid parameter. Refer to the `details` object for more information.
+      security:
+        - token: []
+    post:
+      description: |
+        Create a new user.
+      tags:
+        - Administration
+      parameters:
+        - name: user
+          in: body
+          description: User info.
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+            required:
+              - email
+              - password
+          required: true
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Success.
+          schema:
+            title: UserId
+            type: object
+            properties:
+              id:
+                type: string
+            required:
+              - id
+        409:
+          description: |
+            - `validation`: Missing or invalid parameter. Refer to the `details` object for more information.
+            - `user.duplicate`: Duplicate user (conflict on the |email] field).
+  /users/{user}:
+    delete:
+      description: |
+        Remove the provided user.
+      tags:
+        - Administration
+      parameters:
+        - name: user
+          in: path
+          type: string
+          description: User id.
+          pattern: ^[a-z0-9]+$
+          required: true
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Success.
+        401:
+          $ref: '#/responses/MissingOrInvalidToken'
+        403:
+          $ref: '#/responses/BadToken'
+        404:
+          description: |
+            - `user.notFOund`: User not found.
+        409:
+          description: |
+            - `validation`: Missing or invalid parameter. Refer to the `details` object for more information.
+
+responses:
+  MissingOrInvalidToken:
+    description: |
+      - `auth.missingHeader`: Missing token header (empty `Authorization` header).
+      - `auth.invalidHeader`: Wrong token header format (must be in the `Bearer <token>` form).
+      - `auth.expiredToken`: Expired token. A new token must be requested from the original issuer.
+    schema:
+      $ref: '#/definitions/Error'
+  BadToken:
+    description: |
+      - `auth.badToken`: Error while verifying the token. Mostly due to a bad signature (wrong issuer).
+    schema:
+      $ref: '#/definitions/Error'
+
+definitions:
+  Error:
+    type: object
+    discriminator: code
+    properties:
+      code:
+        type: number
+        format: int32
+      message:
+        type: string
+      details:
+        type: object
+    required:
+      - code
+      - message
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+      email:
+        type: string
+    required:
+      - id
+      - email

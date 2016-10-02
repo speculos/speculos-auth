@@ -1,0 +1,39 @@
+{
+	"name":"speculos-auth",
+	"version":"0.1.0",
+	"description":"Speculos authentication module",
+	"repository":{
+		"type":"git",
+		"url":"http://github.com/speculos/speculos-auth"
+	},
+	"license":"CC-BY-NC-SA-4.0",
+	"author":{
+		"name":"Benjamin Hamon",
+		"url":"https://github.com/bhamon"
+	},
+	"engines":{
+		"node":"~6"
+	},
+	"main":"lib/index.js",
+	"scripts":{
+		"start":"node ."
+	},
+	"dependencies":{
+		"bunyan":"1.8.1",
+		"joi":"9.0.4",
+		"tiny-promisify":"0.1.1",
+		"co":"4.6.0",
+		"koa":"1.2.4",
+		"koa-body":"1.5.0",
+		"koa-router":"5.4.0",
+		"koa-cors":"0.0.16",
+		"jsonwebtoken":"7.1.9",
+		"mongodb":"2.2.10",
+		"minimist":"1.2.0"
+	},
+	"devDependencies":{
+		"mocha":"3.0.2",
+		"chai":"3.5.0",
+		"co-request":"1.0.0"
+	}
+}
