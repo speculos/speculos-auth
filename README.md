@@ -2,7 +2,7 @@
 
 This repository holds the authentication module of [Speculos](https://github.com/speculos/speculos).
 
-For more information about the exposed REST API, please refer to the [REST.yml](REST.yml). This file comply with the OpenAPI specification.
+For more information about the exposed REST API, please refer to the [REST.yml](REST.md). This file comply with the OpenAPI specification.
 
 For installation instructions, please refer to the [INSTALL.md](INSTALL.md) file.
 
