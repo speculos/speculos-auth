@@ -11,6 +11,9 @@ const lib = {
 		log:require('../config/log'),
 		mongoDb:require('../config/mongoDb')
 	},
+	odm:{
+		User:require('../lib/odm/User')
+	},
 	log:require('../lib/log'),
 	mongoDb:require('../lib/mongoDb')
 };
@@ -78,7 +81,7 @@ lib.deps.co(function*() {
 			yield db.dropDatabase();
 		}
 
-		yield db.collection('user').createIndex({email:1}, {name:'user.email', unique:true});
+		yield db.collection(lib.odm.User.COLLECTION).createIndex({email:1}, {name:'user.email', unique:true});
 	} finally {
 		yield db.close();
 	}
