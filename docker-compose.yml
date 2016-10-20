@@ -1,0 +1,43 @@
+# Docker compose file for speculos-auth development
+#
+# build :
+#   docker-compose build
+# run :
+#   docker-compose up
+# attach :
+#   docker-compose exec speculos-auth /bin/bash
+
+version: '2'
+
+services:
+  speculos-auth:
+    build: .
+    image: speculos-auth:0.1.0
+    environment:
+      NODE_ENV: development
+    command: nodemon .
+    ports:
+      - "8001:80"
+    volumes:
+      - "./logs:/app/logs"
+      - "./keys:/app/keys"
+      - "./config:/app/config"
+      - "./lib:/app/lib"
+      - "./tools:/app/tools"
+    networks:
+      - speculos
+    depends_on:
+      - mongodb
+  mongodb:
+    image: "mongo:3.2"
+    command: mongod --storageEngine wiredTiger
+    ports:
+      - "27017:27017"
+    networks:
+      - speculos
+    volumes:
+      - "./db:/data/db"
+
+networks:
+  speculos:
+    driver: bridge

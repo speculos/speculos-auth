@@ -1,0 +1,39 @@
+# Docker compose file for speculos-auth production
+#
+# build :
+#   docker-compose -f docker-compose.prod.yml build
+# run :
+#   docker-compose -f docker-compose.prod.yml up
+# attach :
+#   docker-compose -f docker-compose.prod.yml exec speculos-auth /bin/bash
+
+version: '2'
+
+services:
+  speculos-auth:
+    build: .
+    image: speculos-auth:0.1.0
+    environment:
+      NODE_ENV: production
+    command: node .
+    ports:
+      - "8001:80"
+    volumes:
+      - "./logs:/app/logs"
+      - "./keys:/app/keys"
+      - "./config:/app/config"
+    networks:
+      - speculos
+    depends_on:
+      - mongodb
+  mongodb:
+    image: "mongo:3.2"
+    command: mongod --storageEngine wiredTiger --timeStampFormat ctime
+    networks:
+      - speculos
+    volumes:
+      - "./db:/data/db"
+
+networks:
+  speculos:
+    driver: bridge

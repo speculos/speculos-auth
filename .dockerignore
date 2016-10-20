@@ -1,0 +1,10 @@
+.DS_Store
+config
+config.sample
+db
+keys
+logs
+test
+*.md
+*.yml
+.*
