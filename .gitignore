@@ -1,7 +1,6 @@
 /node_modules/
 /config/
 /logs/
-/db/
 /keys/
-/test/data.sample/
+/test/data/
 _*
