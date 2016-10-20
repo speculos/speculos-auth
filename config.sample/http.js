@@ -18,20 +18,8 @@ module.exports.PORT = 80;
 	The HTTPS optional configuration.
 	If uncommented, creates a HTTPS instance rather than a non secure HTTP one.
 */
-// module.exports.HTTPS = {};
-
-/**
-	Certificate to use for the HTTPS server.
-*/
-// module.exports.HTTPS.CERT = '/path/to/cert.crt';
-
-/**
-	Private key of the HTTPS certificate.
-*/
-// module.exports.HTTPS.KEY = '/path/to/key.pem';
-
-/**
-	Optional CA file.
-	If uncommented, this file must hold the HTTP server root & intermediates certificates chain.
-*/
-// module.exports.HTTPS.CA = '/path/to/ca.pem';
+// module.exports.HTTPS = {
+// 	key:lib.node.fs.readFileSync('/path/to/cert.crt').toString(),
+// 	cert:lib.node.fs.readFileSync('/path/to/key.pem').toString(),
+// 	ca:lib.node.fs.readFileSync('/path/to/ca.pem').toString()
+// };
