@@ -3,4 +3,5 @@
 /logs/
 /keys/
 /test/data/
+.env
 _*

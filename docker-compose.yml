@@ -3,7 +3,7 @@
 # build :
 #   docker-compose build
 # run :
-#   docker-compose up
+#   EXTERNAL_PORT=8001 DATABASE_DIR=../db/ docker-compose up
 # attach :
 #   docker-compose exec speculos-auth /bin/bash
 
@@ -17,13 +17,14 @@ services:
       NODE_ENV: development
     command: nodemon .
     ports:
-      - "8001:80"
+      - "${EXTERNAL_PORT}:80"
     volumes:
       - "./logs:/app/logs"
       - "./keys:/app/keys"
       - "./config:/app/config"
       - "./lib:/app/lib"
       - "./tools:/app/tools"
+    restart: on-failure:3
     networks:
       - speculos
     depends_on:
@@ -36,7 +37,7 @@ services:
     networks:
       - speculos
     volumes:
-      - "./db:/data/db"
+      - "${DATABASE_DIR}:/data/db"
 
 networks:
   speculos:
