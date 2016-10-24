@@ -17,6 +17,7 @@
         }],
         "semi":["error", "always"],
         "curly":["error", "all"],
-        "no-console":"off"
+        "no-console":"off",
+        "eol-last":["error", "always"]
     }
 }
