@@ -1,6 +1,0 @@
-{
-	"node":true,
-	"esnext":true,
-	"validthis":true,
-	"noyield":true
-}
